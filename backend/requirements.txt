@@ -1,0 +1,44 @@
+# Web framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.18
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+alembic==1.14.1
+pgvector==0.3.6
+
+# Redis & Celery
+redis==5.2.1
+celery[redis]==5.4.0
+flower==2.0.1
+
+# Auth
+pyjwt==2.10.1
+passlib[bcrypt]==1.7.4
+
+# LLM
+litellm>=1.55.0
+langchain>=0.3.0
+langchain-openai>=0.3.0
+langgraph>=0.2.0
+
+# Embeddings & Vision
+sentence-transformers==3.3.1
+numpy==1.26.4
+Pillow==11.1.0
+opencv-python-headless==4.10.0.84
+
+# TinyFish client
+httpx>=0.23.0
+
+# Utilities
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
+python-jose[cryptography]==3.3.0
+
+# Chunking & RAG
+chonkie>=1.0.0

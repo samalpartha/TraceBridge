@@ -1,0 +1,98 @@
+[
+  {
+    "source_type": "shelter",
+    "source_url": "https://demo-shelter.redcross.org/houston-convention-center",
+    "person_name": "Marcus R.",
+    "age": "7-8",
+    "gender": "male",
+    "description": "Unaccompanied boy found near Houston Convention Center evacuation shelter. Brown eyes, short black hair, red Texans hoodie. Has a small birthmark on right cheek. Speaks English and Spanish. Appears frightened but healthy.",
+    "photo_url": null,
+    "location_name": "George R. Brown Convention Center, Houston, TX",
+    "location_lat": 29.7520,
+    "location_lng": -95.3563
+  },
+  {
+    "source_type": "hospital",
+    "source_url": "https://demo-hospital.example.com/memorial-hermann",
+    "person_name": "Unknown boy (Marcus?)",
+    "age": "~8",
+    "gender": "male",
+    "description": "Young boy admitted with minor injuries from flood debris. Short black hair, brown eyes. Wearing a muddy red hoodie. Says his name might be Marcus. Birthmark on right cheek. Treated and released to Red Cross care.",
+    "photo_url": null,
+    "location_name": "Memorial Hermann Hospital, Houston, TX",
+    "location_lat": 29.7106,
+    "location_lng": -95.4015
+  },
+  {
+    "source_type": "registry",
+    "source_url": "https://demo-fema.example.com/registrations",
+    "person_name": "Sarah Jenkins",
+    "age": "70s",
+    "gender": "female",
+    "description": "Elderly woman registered at FEMA intake center. Silver hair, blue eyes, petite. Uses a cane. Wearing blue cardigan. Has medical alert bracelet for Alzheimer's. Found wandering near Lee County evacuation zone.",
+    "photo_url": null,
+    "location_name": "Hertz Arena Shelter, Estero, FL",
+    "location_lat": 26.4384,
+    "location_lng": -81.8068
+  },
+  {
+    "source_type": "news",
+    "source_url": "https://demo-news.example.com/maui-evacuations",
+    "person_name": "Tyler",
+    "age": "teenager",
+    "gender": "male",
+    "description": "Teenager matching description seen in evacuation footage from Lahaina. Tall, athletic, wearing what appears to be a basketball jersey. Was with a group heading toward Kahului shelter.",
+    "photo_url": null,
+    "location_name": "War Memorial Stadium Shelter, Kahului, Maui, HI",
+    "location_lat": 20.8893,
+    "location_lng": -156.4729
+  },
+  {
+    "source_type": "shelter",
+    "source_url": "https://demo-shelter.redcross.org/gatlinburg-center",
+    "person_name": "James Mitchell",
+    "age": "40s",
+    "gender": "male",
+    "description": "Man with brown beard streaked gray and glasses. Park ranger. Registered at the Gatlinburg Community Center. Speaks English. Looking for family after wildfire evacuation.",
+    "photo_url": null,
+    "location_name": "Gatlinburg Community Center, Gatlinburg, TN",
+    "location_lat": 35.7137,
+    "location_lng": -83.5138
+  },
+  {
+    "source_type": "social_media",
+    "source_url": "https://demo-social.example.com/post/67890",
+    "person_name": null,
+    "age": "child",
+    "gender": "female",
+    "description": "Photo posted of unidentified young girl at Chico evacuation center. Black hair with pink bow, brown eyes. Wearing a purple Frozen shirt. Very quiet. Holding a stuffed panda. Anyone recognize her?",
+    "photo_url": null,
+    "location_name": "Silver Dollar Fairgrounds Shelter, Chico, CA",
+    "location_lat": 39.7285,
+    "location_lng": -121.8375
+  },
+  {
+    "source_type": "registry",
+    "source_url": "https://demo-redcross.example.com/safe-and-well",
+    "person_name": "Emma C.",
+    "age": "5",
+    "gender": "female",
+    "description": "Small girl, approximate age 5. Black hair with pink bow, brown eyes. Found wandering near Paradise evacuation route. Doesn't speak much. Has a small stuffed panda. Currently in temporary care at Red Cross facility in Chico.",
+    "photo_url": null,
+    "location_name": "Red Cross Shelter, Chico, CA",
+    "location_lat": 39.7284,
+    "location_lng": -121.8363
+  },
+  {
+    "source_type": "shelter",
+    "source_url": "https://demo-shelter.redcross.org/knoxville-center",
+    "person_name": "James M.",
+    "age": "45",
+    "gender": "male",
+    "description": "Park ranger from Gatlinburg, registered at Knoxville evacuation center after traveling from Sevierville. Matching glasses and beard. Confirmed identity. Seeking family reunification assistance.",
+    "photo_url": null,
+    "location_name": "Knoxville Civic Auditorium Shelter, Knoxville, TN",
+    "location_lat": 35.9606,
+    "location_lng": -83.9207
+  }
+]
