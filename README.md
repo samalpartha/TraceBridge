@@ -464,16 +464,7 @@ npm run dev -- -p 3005
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | <admin@tracebridge.ai> | admin123 |
-| Caseworker | <caseworker@redcross.org> | worker123 |
-
-### Social Login Options
-
-Or sign in instantly with:
-
-[![Google](https://img.shields.io/badge/Google-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://google.com)
-[![Apple](https://img.shields.io/badge/Apple-000000?style=for-the-badge&logo=apple&logoColor=white)](https://apple.com)
-[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://facebook.com)
-[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com)
+| Family | <father.khalil@email.com> | family123 |
 
 ---
 
