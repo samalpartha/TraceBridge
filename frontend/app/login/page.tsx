@@ -43,9 +43,9 @@ export default function LoginPage() {
                         <Image
                             src="/logo.png"
                             alt="TraceBridge"
-                            width={32}
-                            height={32}
-                            className="h-8 w-8 brightness-0 dark:invert"
+                            width={64}
+                            height={64}
+                            className="h-16 w-16 dark:invert contrast-125"
                             unoptimized
                         />
                     </div>

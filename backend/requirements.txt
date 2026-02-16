@@ -18,6 +18,7 @@ flower==2.0.1
 # Auth
 pyjwt==2.10.1
 passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
 
 # LLM
 litellm>=1.55.0
@@ -35,7 +36,7 @@ opencv-python-headless==4.10.0.84
 httpx>=0.23.0
 
 # Utilities
-pydantic==2.10.4
+pydantic[email]==2.10.4
 pydantic-settings==2.7.0
 python-dotenv==1.0.1
 python-jose[cryptography]==3.3.0

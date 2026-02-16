@@ -35,14 +35,14 @@ import { useCrisisMode } from "@/components/crisis-mode";
 import { useRouter } from "next/navigation";
 
 /* ─── TraceBridge Logo ─── */
-function TraceBridgeLogo() {
+function TraceBridgeLogo({ size = 32, className }: { size?: number; className?: string }) {
   return (
     <Image
       src="/logo.png"
       alt="TraceBridge"
-      width={32}
-      height={32}
-      className="h-8 w-8 brightness-0 dark:invert"
+      width={size}
+      height={size}
+      className={cn("dark:invert contrast-125", className)}
       unoptimized
     />
   );
@@ -172,7 +172,7 @@ export function Navbar() {
               collapsed && "justify-center"
             )}
           >
-            <TraceBridgeLogo />
+            <TraceBridgeLogo size={collapsed ? 32 : 64} className={collapsed ? "h-8 w-8" : "h-16 w-16"} />
           </Link>
         </div>
 

@@ -21,7 +21,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 if not os.path.exists(DATA_DIR):
-    DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+    # In Docker prod, backend/ is under /app, but data/ is at /app/data
+    DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
+if not os.path.exists(DATA_DIR):
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 
 
 def random_embedding(dim):

@@ -459,6 +459,13 @@ npm run dev -- -p 3005
 - Backend API: <http://localhost:8005>
 - API Docs: <http://localhost:8005/docs>
 
+## Live Deployment (Compute Engine)
+
+- **Frontend**: [http://34.46.46.155:3000](http://34.46.46.155:3000)
+- **Backend API**: [http://34.46.46.155:8000/docs](http://34.46.46.155:8000/docs)
+- **Flower (Tasks)**: [http://34.46.46.155:5555](http://34.46.46.155:5555)
+- **Health Check**: [http://34.46.46.155:8000/health](http://34.46.46.155:8000/health)
+
 ### Demo Credentials
 
 | Role | Email | Password |
