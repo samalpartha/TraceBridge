@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Shield, User, Lock, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +40,14 @@ export default function LoginPage() {
             <Card className="w-full max-w-md border-none shadow-2xl">
                 <CardHeader className="space-y-1 text-center">
                     <div className="flex justify-center mb-4">
-                        <img src="/logo.png" alt="TraceBridge" className="h-16 w-auto" />
+                        <Image
+                            src="/logo.png"
+                            alt="TraceBridge"
+                            width={32}
+                            height={32}
+                            className="h-8 w-8 brightness-0 dark:invert"
+                            unoptimized
+                        />
                     </div>
                     <CardTitle className="text-2xl font-bold tracking-tight">Crisis Response Portal</CardTitle>
                     <CardDescription>

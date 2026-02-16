@@ -33,31 +33,31 @@ Object.defineProperty(window, "matchMedia", {
 
 // Suppress ResizeObserver errors
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 };
 
 // Suppress IntersectionObserver errors
-(global as any).IntersectionObserver = class IntersectionObserver {
+(global as unknown as { IntersectionObserver: unknown }).IntersectionObserver = class IntersectionObserver {
   readonly root = null;
   readonly rootMargin = "";
   readonly thresholds: readonly number[] = [];
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
   takeRecords() {
     return [];
   }
 };
 
 // Mock global fetch
-(global as any).fetch = jest.fn(() =>
+(global as unknown as { fetch: unknown }).fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({}),
     text: () => Promise.resolve(""),
-  })
+  } as Response)
 );
 
-export {};
+export { };

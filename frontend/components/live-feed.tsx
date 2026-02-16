@@ -1,32 +1,31 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { getLiveFeed, getLiveStats, triggerIngestion } from "@/lib/api-client";
 import {
-  Radio,
   Database,
   Globe,
   Shield,
-  ExternalLink,
   MapPin,
-  Clock,
   RefreshCw,
   Loader2,
   AlertTriangle,
-  Download,
-  TrendingUp,
-  Camera,
-  Zap,
-  ChevronDown,
   Star,
+  Radio,
   Activity,
-  BarChart3,
+  Camera,
+  TrendingUp,
+  Download,
+  Zap,
+  Clock,
+  ExternalLink,
+  ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -171,9 +170,8 @@ function TrustStars({ trust }: { trust: number }) {
       {[1, 2, 3, 4, 5].map((s) => (
         <Star
           key={s}
-          className={`h-2.5 w-2.5 ${
-            s <= stars ? "text-amber-400 fill-amber-400" : "text-muted-foreground/20"
-          }`}
+          className={`h-2.5 w-2.5 ${s <= stars ? "text-amber-400 fill-amber-400" : "text-muted-foreground/20"
+            }`}
         />
       ))}
     </div>
@@ -279,15 +277,13 @@ export function LiveDataFeed({ compact = false }: { compact?: boolean }) {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`flex items-start gap-2 rounded-lg p-2.5 border text-xs ${
-                  a.severity === "high"
-                    ? "bg-red-50 border-red-200"
-                    : "bg-amber-50 border-amber-200"
-                }`}
+                className={`flex items-start gap-2 rounded-lg p-2.5 border text-xs ${a.severity === "high"
+                  ? "bg-red-50 border-red-200"
+                  : "bg-amber-50 border-amber-200"
+                  }`}
               >
-                <Activity className={`h-3.5 w-3.5 flex-shrink-0 mt-0.5 ${
-                  a.severity === "high" ? "text-red-600" : "text-amber-600"
-                }`} />
+                <Activity className={`h-3.5 w-3.5 flex-shrink-0 mt-0.5 ${a.severity === "high" ? "text-red-600" : "text-amber-600"
+                  }`} />
                 <div>
                   <span className={`font-medium ${a.severity === "high" ? "text-red-700" : "text-amber-700"}`}>
                     Anomaly detected:
@@ -442,13 +438,13 @@ export function LiveDataFeed({ compact = false }: { compact?: boolean }) {
                       {/* Photo or icon */}
                       <div className="h-12 w-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
                         {item.photo_url ? (
-                          <img
-                            src={item.photo_url}
+                          <Image
+                            src={item.photo_url.trim()}
                             alt={item.person_name}
+                            width={48}
+                            height={48}
                             className="h-full w-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
+                            unoptimized
                           />
                         ) : (
                           <div className={`p-2 rounded-lg ${cfg.bgColor}`}>

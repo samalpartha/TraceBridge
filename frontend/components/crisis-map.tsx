@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { APIProvider, Map, AdvancedMarker, InfoWindow, useMap } from "@vis.gl/react-google-maps";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { getHeatmapData } from "@/lib/api-client";
 import type { HeatmapData } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
 import { MapPin, Loader2, Radio, AlertTriangle, Target, Play, Pause, Clock, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +35,7 @@ const statusConfig: Record<string, { color: string; urgency: number; label: stri
 function dotSvg(color: string, size: number, opacity = 0.7): string {
   return `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
-    `<circle cx="${size/2}" cy="${size/2}" r="${size/2 - 1}" fill="${color}" fill-opacity="${opacity}" stroke="${color}" stroke-width="1" stroke-opacity="0.9"/>` +
+    `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 1}" fill="${color}" fill-opacity="${opacity}" stroke="${color}" stroke-width="1" stroke-opacity="0.9"/>` +
     `</svg>`
   )}`;
 }
@@ -44,12 +44,12 @@ function casePinSvg(color: string, urgency: number): string {
   const size = urgency >= 2 ? 28 : 24;
   const r = size / 2 - 2;
   const pulseRing = urgency >= 2
-    ? `<circle cx="${size/2}" cy="${size/2}" r="${r + 1}" fill="none" stroke="${color}" stroke-width="1" stroke-opacity="0.4"><animate attributeName="r" from="${r}" to="${r + 6}" dur="1.5s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite"/></circle>`
+    ? `<circle cx="${size / 2}" cy="${size / 2}" r="${r + 1}" fill="none" stroke="${color}" stroke-width="1" stroke-opacity="0.4"><animate attributeName="r" from="${r}" to="${r + 6}" dur="1.5s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite"/></circle>`
     : "";
   return `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
     pulseRing +
-    `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="${color}" stroke="white" stroke-width="3"/>` +
+    `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="${color}" stroke="white" stroke-width="3"/>` +
     `</svg>`
   )}`;
 }
@@ -59,8 +59,8 @@ function radiusRingSvg(color: string): string {
   const size = 120;
   return `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
-    `<circle cx="${size/2}" cy="${size/2}" r="${size/2 - 2}" fill="${color}" fill-opacity="0.06" stroke="${color}" stroke-width="1.5" stroke-dasharray="6 4" stroke-opacity="0.4"/>` +
-    `<circle cx="${size/2}" cy="${size/2}" r="${size/4}" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.3"/>` +
+    `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 2}" fill="${color}" fill-opacity="0.06" stroke="${color}" stroke-width="1.5" stroke-dasharray="6 4" stroke-opacity="0.4"/>` +
+    `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.3"/>` +
     `</svg>`
   )}`;
 }
@@ -68,7 +68,7 @@ function radiusRingSvg(color: string): string {
 /* ─── Heatmap Layer (Google Maps visualization library) ─── */
 function HeatmapLayer({ data }: { data: HeatmapData | null }) {
   const map = useMap();
-  const [heatmap, setHeatmap] = useState<google.maps.visualization.HeatmapLayer | null>(null);
+  const heatmapRef = useRef<google.maps.visualization.HeatmapLayer | null>(null);
 
   useEffect(() => {
     if (!map || !data?.sightings?.length) return;
@@ -80,10 +80,10 @@ function HeatmapLayer({ data }: { data: HeatmapData | null }) {
       weight: s.weight,
     }));
 
-    if (heatmap) {
-      heatmap.setData(points);
+    if (heatmapRef.current) {
+      heatmapRef.current.setData(points);
     } else {
-      const layer = new google.maps.visualization.HeatmapLayer({
+      heatmapRef.current = new google.maps.visualization.HeatmapLayer({
         data: points,
         map,
         radius: 30,
@@ -99,11 +99,13 @@ function HeatmapLayer({ data }: { data: HeatmapData | null }) {
           "rgba(255, 0, 0, 1)",
         ],
       });
-      setHeatmap(layer);
     }
 
     return () => {
-      if (heatmap) heatmap.setMap(null);
+      if (heatmapRef.current) {
+        heatmapRef.current.setMap(null);
+        heatmapRef.current = null;
+      }
     };
   }, [map, data]);
 
@@ -125,8 +127,8 @@ function legacyPinSvg(): string {
   const size = 20;
   return `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
-    `<rect x="2" y="2" width="${size-4}" height="${size-4}" rx="3" fill="#7c3aed" fill-opacity="0.7" stroke="#7c3aed" stroke-width="1.5"/>` +
-    `<text x="${size/2}" y="${size/2 + 1}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="white" font-weight="bold">H</text>` +
+    `<rect x="2" y="2" width="${size - 4}" height="${size - 4}" rx="3" fill="#7c3aed" fill-opacity="0.7" stroke="#7c3aed" stroke-width="1.5"/>` +
+    `<text x="${size / 2}" y="${size / 2 + 1}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="white" font-weight="bold">H</text>` +
     `</svg>`
   )}`;
 }
@@ -194,7 +196,13 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
             position={{ lat: s.lat, lng: s.lng }}
             onClick={() => setSelectedSighting(i)}
           >
-            <img src={dotSvg(typeColors[s.type] || "#6b7280", size, 0.5)} width={size} height={size} alt="" />
+            <Image
+              src={dotSvg(typeColors[s.type] || "#6b7280", size, 0.5)}
+              width={size}
+              height={size}
+              alt=""
+              unoptimized
+            />
           </AdvancedMarker>
         );
       })}
@@ -233,7 +241,14 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
               position={{ lat: c.lat, lng: c.lng }}
               zIndex={1}
             >
-              <img src={radiusRingSvg(cfg.color)} width={120} height={120} alt="" style={{ transform: "translate(-50%, -50%)", position: "absolute", top: "50%", left: "50%" }} />
+              <Image
+                src={radiusRingSvg(cfg.color)}
+                width={120}
+                height={120}
+                alt=""
+                style={{ transform: "translate(-50%, -50%)", position: "absolute", top: "50%", left: "50%" }}
+                unoptimized
+              />
             </AdvancedMarker>
           );
         })}
@@ -249,7 +264,13 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
             onClick={() => setSelectedCase(i)}
             zIndex={100}
           >
-            <img src={casePinSvg(cfg.color, cfg.urgency)} width={pinSize} height={pinSize} alt={c.name} />
+            <Image
+              src={casePinSvg(cfg.color, cfg.urgency)}
+              width={pinSize}
+              height={pinSize}
+              alt={c.name}
+              unoptimized
+            />
           </AdvancedMarker>
         );
       })}
@@ -306,7 +327,13 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
           onClick={() => setSelectedLegacy(i)}
           zIndex={50}
         >
-          <img src={legacyPinSvg()} width={20} height={20} alt={lp.name} />
+          <Image
+            src={legacyPinSvg()}
+            width={20}
+            height={20}
+            alt={lp.name}
+            unoptimized
+          />
         </AdvancedMarker>
       ))}
 
@@ -344,7 +371,13 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
             onClick={() => setSelectedCorridor(i)}
             zIndex={40}
           >
-            <img src={corridorSvg()} width={60} height={8} alt="" />
+            <Image
+              src={corridorSvg()}
+              width={60}
+              height={8}
+              alt=""
+              unoptimized
+            />
           </AdvancedMarker>
         );
       })}
@@ -379,7 +412,13 @@ function MapMarkers({ data, showHeatmap, showLegacy, showCorridors, showShelters
           onClick={() => setSelectedShelter(i)}
           zIndex={30}
         >
-          <img src={shelterSvg(s.occupancy / s.capacity)} width={24} height={24} alt={s.name} />
+          <Image
+            src={shelterSvg(s.occupancy / s.capacity)}
+            width={24}
+            height={24}
+            alt={s.name}
+            unoptimized
+          />
         </AdvancedMarker>
       ))}
 

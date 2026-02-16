@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +11,6 @@ import { Progress } from "@/components/ui/progress";
 import type { Case } from "@/lib/types";
 import {
   MapPin,
-  Clock,
   User,
   Eye,
   FileText,
@@ -25,10 +25,6 @@ import {
   Send,
   Bot,
   UserCheck,
-  Radio,
-  Globe,
-  Fingerprint,
-  Activity,
   Brain,
 } from "lucide-react";
 
@@ -138,10 +134,10 @@ function getCaseIntel(c: Case) {
   const tfStatus = c.status === "verified"
     ? { text: "Outreach sent — 2 channels", color: "text-green-600" }
     : c.status === "matched"
-    ? { text: "Pending verification — outreach blocked", color: "text-amber-600" }
-    : c.status === "searching"
-    ? { text: "3 scans active", color: "text-blue-600" }
-    : { text: "Awaiting search trigger", color: "text-muted-foreground" };
+      ? { text: "Pending verification — outreach blocked", color: "text-amber-600" }
+      : c.status === "searching"
+        ? { text: "3 scans active", color: "text-blue-600" }
+        : { text: "Awaiting search trigger", color: "text-muted-foreground" };
 
   return {
     leadCount,
@@ -170,10 +166,9 @@ export function CaseCard({ caseData }: { caseData: Case }) {
   const NextIcon = intel.nextAction.icon;
 
   return (
-    <Card className={`overflow-hidden bg-white/55 dark:bg-slate-900/35 backdrop-blur-xl border-white/25 dark:border-white/8 transition-all duration-220 hover:bg-white/75 dark:hover:bg-slate-900/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] ${
-      risk.slaStatus === "breach" ? "!border-red-300/50 shadow-[0_0_16px_rgba(220,38,38,0.08)]" :
+    <Card className={`overflow-hidden bg-white/55 dark:bg-slate-900/35 backdrop-blur-xl border-white/25 dark:border-white/8 transition-all duration-220 hover:bg-white/75 dark:hover:bg-slate-900/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] ${risk.slaStatus === "breach" ? "!border-red-300/50 shadow-[0_0_16px_rgba(220,38,38,0.08)]" :
       risk.level === "Critical" ? "!border-red-200/40" : ""
-    }`}>
+      }`}>
       <CardContent className="p-0">
         {/* Main row */}
         <Link href={`/cases/${caseData.id}`}>
@@ -181,11 +176,14 @@ export function CaseCard({ caseData }: { caseData: Case }) {
             {/* Photo + risk score overlay */}
             <div className="relative h-20 w-20 flex-shrink-0 rounded-lg bg-muted overflow-hidden">
               {photoUrl && !imgError ? (
-                <img
-                  src={`${API_URL}${photoUrl}`}
+                <Image
+                  src={`${API_URL}${photoUrl.trim()}`}
                   alt={caseData.person_name}
+                  width={80}
+                  height={80}
                   className="h-full w-full object-cover"
                   onError={() => setImgError(true)}
+                  unoptimized
                 />
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
@@ -193,11 +191,10 @@ export function CaseCard({ caseData }: { caseData: Case }) {
                 </div>
               )}
               {/* Risk score badge */}
-              <div className={`absolute top-0.5 left-0.5 rounded px-1 py-0.5 text-[9px] font-bold ${
-                risk.level === "Critical" ? "bg-red-600 text-white" :
+              <div className={`absolute top-0.5 left-0.5 rounded px-1 py-0.5 text-[9px] font-bold ${risk.level === "Critical" ? "bg-red-600 text-white" :
                 risk.level === "High" ? "bg-amber-500 text-white" :
-                "bg-blue-500 text-white"
-              }`}>
+                  "bg-blue-500 text-white"
+                }`}>
                 {risk.score}
               </div>
               {/* Minor badge */}
@@ -228,16 +225,14 @@ export function CaseCard({ caseData }: { caseData: Case }) {
                   </div>
                 </div>
                 {/* Confidence meter */}
-                <div className={`text-right shrink-0 rounded-lg border p-1.5 ${
-                  intel.confidenceScore >= 70 ? "border-green-200 bg-green-50" :
+                <div className={`text-right shrink-0 rounded-lg border p-1.5 ${intel.confidenceScore >= 70 ? "border-green-200 bg-green-50" :
                   intel.confidenceScore >= 45 ? "border-amber-200 bg-amber-50" :
-                  "border-red-200 bg-red-50"
-                }`}>
-                  <div className={`text-sm font-bold ${
-                    intel.confidenceScore >= 70 ? "text-green-700" :
+                    "border-red-200 bg-red-50"
+                  }`}>
+                  <div className={`text-sm font-bold ${intel.confidenceScore >= 70 ? "text-green-700" :
                     intel.confidenceScore >= 45 ? "text-amber-700" :
-                    "text-red-700"
-                  }`}>{intel.confidenceScore}%</div>
+                      "text-red-700"
+                    }`}>{intel.confidenceScore}%</div>
                   <div className="text-[8px] text-muted-foreground">confidence</div>
                 </div>
               </div>
@@ -278,11 +273,10 @@ export function CaseCard({ caseData }: { caseData: Case }) {
         <div className="flex items-center justify-between border-t px-3 py-1.5 bg-muted/20">
           <div className="flex items-center gap-3 text-[10px]">
             {/* SLA timer */}
-            <span className={`flex items-center gap-1 ${
-              risk.slaStatus === "breach" ? "text-red-600 font-bold" :
+            <span className={`flex items-center gap-1 ${risk.slaStatus === "breach" ? "text-red-600 font-bold" :
               risk.slaStatus === "warning" ? "text-amber-600 font-semibold" :
-              "text-muted-foreground"
-            }`}>
+                "text-muted-foreground"
+              }`}>
               <Timer className="h-2.5 w-2.5" />
               {risk.slaHours}h / {risk.slaTarget}h SLA
             </span>

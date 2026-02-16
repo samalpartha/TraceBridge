@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,7 +59,11 @@ export function CaseIntakeForm() {
     const file = acceptedFiles[0];
     if (file) {
       setPhoto(file);
-      setPreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   }, []);
 
@@ -152,9 +157,11 @@ export function CaseIntakeForm() {
         <CardContent>
           {preview ? (
             <div className="relative inline-block">
-              <img
+              <Image
                 src={preview}
                 alt="Preview"
+                width={192}
+                height={192}
                 className="h-48 w-48 rounded-lg object-cover border"
               />
               <button
@@ -171,11 +178,10 @@ export function CaseIntakeForm() {
           ) : (
             <div
               {...getRootProps()}
-              className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
-                isDragActive
-                  ? "border-primary bg-primary/5"
-                  : "border-muted-foreground/25 hover:border-primary/50"
-              }`}
+              className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${isDragActive
+                ? "border-primary bg-primary/5"
+                : "border-muted-foreground/25 hover:border-primary/50"
+                }`}
             >
               <input {...getInputProps()} />
               <Upload className="h-10 w-10 text-muted-foreground mb-3" />

@@ -9,16 +9,16 @@ import { SidebarContext } from "@/components/sidebar-context";
 import { usePathname } from "next/navigation";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("tb-sidebar-collapsed") === "true";
+    }
+    return false;
+  });
   const pathname = usePathname();
   const isLandingPage = pathname === "/" || pathname === "/login";
 
   // Persist sidebar state
-  useEffect(() => {
-    const saved = localStorage.getItem("tb-sidebar-collapsed");
-    if (saved === "true") setCollapsed(true);
-  }, []);
-
   useEffect(() => {
     localStorage.setItem("tb-sidebar-collapsed", String(collapsed));
   }, [collapsed]);

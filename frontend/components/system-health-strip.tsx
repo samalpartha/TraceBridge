@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Activity, Wifi, Clock, Layers, Cpu, Database, Zap, AlertTriangle } from "lucide-react";
+import { Activity, Wifi, Layers, Cpu, Database, Zap } from "lucide-react";
 
 function useSimulatedMetric(base: number, variance: number, interval = 3000) {
   const [value, setValue] = useState(base);

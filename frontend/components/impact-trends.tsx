@@ -29,20 +29,23 @@ function generateReunionTrend() {
     const date = new Date(baseDate);
     date.setDate(date.getDate() + i);
 
-    // Simulate increasing reunions over time
-    const dailyReunions = Math.random() < 0.3 ? 1 : 0; // ~30% chance per day
+    // Use index i to derive deterministic "random" values for mock data
+    // This avoids React purity/hydration warnings
+    const dailyReunions = (i % 7 === 0 || i % 13 === 0) ? 1 : 0;
     cumReunions += dailyReunions;
 
     // Time-to-reunion decreasing as AI improves
-    const baseTime = 72 - i * 1.5 + (Math.random() * 10 - 5);
+    const noise = ((i * 13) % 10) - 5;
+    const baseTime = 72 - i * 1.5 + noise;
     const timeToReunion = Math.max(8, Math.round(baseTime));
 
     // AI accuracy improving
-    const baseAccuracy = 55 + i * 1.2 + (Math.random() * 5 - 2.5);
+    const accNoise = ((i * 7) % 5) - 2.5;
+    const baseAccuracy = 55 + i * 1.2 + accNoise;
     const accuracy = Math.min(95, Math.round(baseAccuracy));
 
     // Hours saved accumulating
-    cumHours += dailyReunions > 0 ? 48 : Math.round(Math.random() * 8);
+    cumHours += dailyReunions > 0 ? 48 : ((i * 17) % 8);
 
     data.push({
       day: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),

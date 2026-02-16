@@ -32,7 +32,6 @@ import {
   Timer,
   DollarSign,
   BarChart3,
-  Activity,
   Brain,
   Radio,
   CheckCircle,
@@ -82,8 +81,8 @@ function getCaseRisk(c: Case): {
   const reason = isChild
     ? "Unaccompanied minor"
     : score >= 75
-    ? daysSince > 14 ? `${daysSince}d — SLA breach` : "Disaster proximity"
-    : daysSince > 7 ? `${daysSince} days since reported` : "Active search needed";
+      ? daysSince > 14 ? `${daysSince}d — SLA breach` : "Disaster proximity"
+      : daysSince > 7 ? `${daysSince} days since reported` : "Active search needed";
 
   return { level, score, color, reason, slaHours: hoursSince, slaStatus };
 }
@@ -191,8 +190,8 @@ export default function DashboardPage() {
   const [escalating, setEscalating] = useState(false);
 
   useEffect(() => {
-    getCases().then((d) => setCases(d.cases || [])).catch(() => {});
-    getDashboardStats().then(setStats).catch(() => {});
+    getCases().then((d) => setCases(d.cases || [])).catch(() => { });
+    getDashboardStats().then(setStats).catch(() => { });
   }, []);
 
   const activeCases = cases
@@ -384,13 +383,12 @@ export default function DashboardPage() {
                           <div className="flex flex-col items-end gap-1">
                             <Badge
                               variant="outline"
-                              className={`text-xs shrink-0 ${
-                                risk.level === "Critical"
+                              className={`text-xs shrink-0 ${risk.level === "Critical"
                                   ? "border-red-300 text-red-700 bg-red-50"
                                   : risk.level === "High"
-                                  ? "border-amber-300 text-amber-700 bg-amber-50"
-                                  : "border-blue-300 text-blue-700 bg-blue-50"
-                              }`}
+                                    ? "border-amber-300 text-amber-700 bg-amber-50"
+                                    : "border-blue-300 text-blue-700 bg-blue-50"
+                                }`}
                             >
                               {risk.score}
                             </Badge>
@@ -474,9 +472,8 @@ export default function DashboardPage() {
                         transition={{ delay: 0.4 + i * 0.05 }}
                       >
                         <Link href={`/cases/${c.id}`}>
-                          <div className={`grid grid-cols-12 gap-2 items-center rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer ${
-                            c.risk.slaStatus === "breach" ? "border-red-200 bg-red-50/30" : ""
-                          }`}>
+                          <div className={`grid grid-cols-12 gap-2 items-center rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer ${c.risk.slaStatus === "breach" ? "border-red-200 bg-red-50/30" : ""
+                            }`}>
                             {/* Risk score */}
                             <div className="col-span-1">
                               <div className={`text-lg font-bold ${c.risk.color}`}>
@@ -502,12 +499,10 @@ export default function DashboardPage() {
                             {/* Agent assignment */}
                             <div className="col-span-2">
                               <div className="flex items-center gap-1.5">
-                                <div className={`h-5 w-5 rounded-full flex items-center justify-center ${
-                                  agent.type === "ai" ? "bg-blue-100" : agent.type === "volunteer" ? "bg-green-100" : "bg-purple-100"
-                                }`}>
-                                  <AgentIcon className={`h-3 w-3 ${
-                                    agent.type === "ai" ? "text-blue-600" : agent.type === "volunteer" ? "text-green-600" : "text-purple-600"
-                                  }`} />
+                                <div className={`h-5 w-5 rounded-full flex items-center justify-center ${agent.type === "ai" ? "bg-blue-100" : agent.type === "volunteer" ? "bg-green-100" : "bg-purple-100"
+                                  }`}>
+                                  <AgentIcon className={`h-3 w-3 ${agent.type === "ai" ? "text-blue-600" : agent.type === "volunteer" ? "text-green-600" : "text-purple-600"
+                                    }`} />
                                 </div>
                                 <div className="min-w-0">
                                   <div className="text-[10px] font-medium truncate">{agent.name}</div>
@@ -518,20 +513,18 @@ export default function DashboardPage() {
 
                             {/* SLA timer */}
                             <div className="col-span-1">
-                              <div className={`text-xs font-mono ${
-                                c.risk.slaStatus === "breach" ? "text-red-600 font-bold" :
-                                c.risk.slaStatus === "warning" ? "text-amber-600 font-semibold" :
-                                "text-muted-foreground"
-                              }`}>
+                              <div className={`text-xs font-mono ${c.risk.slaStatus === "breach" ? "text-red-600 font-bold" :
+                                  c.risk.slaStatus === "warning" ? "text-amber-600 font-semibold" :
+                                    "text-muted-foreground"
+                                }`}>
                                 {c.risk.slaHours}h
                               </div>
                               <Progress
                                 value={Math.min(100, (c.risk.slaHours / (c.age != null && c.age < 12 ? 4 : 24)) * 100)}
-                                className={`h-1 mt-1 ${
-                                  c.risk.slaStatus === "breach" ? "[&>div]:bg-red-500" :
-                                  c.risk.slaStatus === "warning" ? "[&>div]:bg-amber-500" :
-                                  "[&>div]:bg-green-500"
-                                }`}
+                                className={`h-1 mt-1 ${c.risk.slaStatus === "breach" ? "[&>div]:bg-red-500" :
+                                    c.risk.slaStatus === "warning" ? "[&>div]:bg-amber-500" :
+                                      "[&>div]:bg-green-500"
+                                  }`}
                               />
                             </div>
 
@@ -548,11 +541,10 @@ export default function DashboardPage() {
                             <div className="col-span-2">
                               <Badge
                                 variant="outline"
-                                className={`text-xs capitalize ${
-                                  c.status === "matched" ? "border-purple-200 text-purple-600" :
-                                  c.status === "searching" ? "border-blue-200 text-blue-600" :
-                                  "border-amber-200 text-amber-600"
-                                }`}
+                                className={`text-xs capitalize ${c.status === "matched" ? "border-purple-200 text-purple-600" :
+                                    c.status === "searching" ? "border-blue-200 text-blue-600" :
+                                      "border-amber-200 text-amber-600"
+                                  }`}
                               >
                                 {c.status}
                               </Badge>

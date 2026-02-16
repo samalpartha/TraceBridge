@@ -4,18 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Bot,
-  Send,
   Phone,
   Mail,
   MessageSquare,
   CheckCircle,
   Clock,
   XCircle,
-  Zap,
-  FileText,
   Shield,
   Radio,
-  ArrowRight,
 } from "lucide-react";
 
 interface TinyFishTimelineProps {
@@ -131,20 +127,18 @@ export function TinyFishTimeline({ caseId, personName }: TinyFishTimelineProps) 
               <div key={event.id} className="flex gap-3">
                 {/* Timeline line */}
                 <div className="flex flex-col items-center">
-                  <div className={`h-7 w-7 rounded-full border-2 flex items-center justify-center ${
-                    event.status === "completed"
+                  <div className={`h-7 w-7 rounded-full border-2 flex items-center justify-center ${event.status === "completed"
                       ? "border-green-300 bg-green-50"
                       : event.status === "pending"
-                      ? "border-amber-300 bg-amber-50"
-                      : "border-blue-300 bg-blue-50"
-                  }`}>
-                    <EventIcon className={`h-3.5 w-3.5 ${
-                      event.status === "completed"
+                        ? "border-amber-300 bg-amber-50"
+                        : "border-blue-300 bg-blue-50"
+                    }`}>
+                    <EventIcon className={`h-3.5 w-3.5 ${event.status === "completed"
                         ? "text-green-600"
                         : event.status === "pending"
-                        ? "text-amber-600"
-                        : "text-blue-600"
-                    }`} />
+                          ? "text-amber-600"
+                          : "text-blue-600"
+                      }`} />
                   </div>
                   {i < events.length - 1 && (
                     <div className="w-0.5 h-full min-h-[24px] bg-border" />

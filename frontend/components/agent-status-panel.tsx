@@ -5,23 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { SearchPipelineEvent } from "@/lib/types";
 import {
-  Eye,
-  FileText,
-  MapPin,
-  Merge,
   Loader2,
   CheckCircle,
   AlertCircle,
   Scan,
 } from "lucide-react";
-
-const agentIcons: Record<string, React.ElementType> = {
-  intake: Scan,
-  vision: Eye,
-  rag: FileText,
-  geo: MapPin,
-  fusion: Merge,
-};
 
 const agentLabels: Record<string, string> = {
   PIPELINE_STARTED: "Starting Pipeline",

@@ -7,23 +7,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Building2,
   Shield,
-  Users,
   CheckCircle,
-  ArrowRight,
-  Lock,
-  Eye,
   FileText,
-  Globe,
   Zap,
-  Heart,
-  BarChart3,
   Clock,
-  Send,
+  Building2,
   Star,
-  TrendingUp,
-  Activity,
+  Lock,
+  Users,
+  Eye,
+  Globe,
+  BarChart3,
 } from "lucide-react";
 
 /* ─── Onboarding Steps ─── */

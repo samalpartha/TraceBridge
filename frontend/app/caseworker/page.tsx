@@ -18,7 +18,6 @@ import {
   Filter,
   ArrowUpDown,
   Inbox,
-  Activity,
   Bot,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -28,13 +27,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
 type FilterType = "all" | "pending" | "approved" | "rejected";
 
+interface CaseEvidence {
+  id: string;
+  match_id: string | number;
+  confidence: string;
+  evidence: Array<{
+    type: string;
+    detail: string;
+    strength: number;
+  }>;
+  red_flags: string[];
+  recommendation: string;
+}
+
 export default function CaseworkerPage() {
   const [matches, setMatches] = useState<MatchCandidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterType>("pending");
   const [sortBy, setSortBy] = useState<"score" | "date">("score");
-  const [evidenceCards, setEvidenceCards] = useState<any[]>([]);
+  const [evidenceCards, setEvidenceCards] = useState<CaseEvidence[]>([]);
   const [aiAssisting, setAiAssisting] = useState(false);
 
   const handleAiAssist = async () => {
@@ -42,7 +54,7 @@ export default function CaseworkerPage() {
     try {
       // Get unique case IDs from pending matches
       const pendingCaseIds = [...new Set(matches.filter((m) => m.status === "pending").map((m) => m.case_id))];
-      const allCards: any[] = [];
+      const allCards: CaseEvidence[] = [];
       for (const caseId of pendingCaseIds.slice(0, 3)) {
         const res = await tfVerifyAssist(caseId);
         allCards.push(...(res.fallback || []));
@@ -171,7 +183,7 @@ export default function CaseworkerPage() {
                       {card.confidence} confidence
                     </Badge>
                   </div>
-                  {card.evidence?.map((e: any, j: number) => (
+                  {card.evidence?.map((e, j) => (
                     <div key={j} className="flex items-center justify-between text-xs">
                       <span>{e.type}: {e.detail}</span>
                       <div className="flex items-center gap-1">

@@ -5,10 +5,15 @@ import { LiveDataFeed } from "@/components/live-feed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Shield, Globe, Zap, ExternalLink, Bot, Loader2, RefreshCw, CheckCircle, History } from "lucide-react";
+import { Shield, Globe, Zap, ExternalLink, Bot, Loader2, RefreshCw, History } from "lucide-react";
 import { DescriptorSearch } from "@/components/descriptor-search";
 import { tfScanSources } from "@/lib/api-client";
 import { toast } from "sonner";
+
+interface ScanResult {
+  status: string;
+  run_id?: string;
+}
 
 const dataSources = [
   {
@@ -80,7 +85,7 @@ const dataSources = [
 
 export default function LiveFeedPage() {
   const [scanning, setScanning] = useState<string | null>(null);
-  const [scanResults, setScanResults] = useState<Record<string, any>>({});
+  const [scanResults, setScanResults] = useState<Record<string, ScanResult>>({});
 
   const handleScan = async (source: string) => {
     setScanning(source);

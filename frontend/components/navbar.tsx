@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -17,7 +18,6 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
-  Home,
   Building2,
   DollarSign,
   AlertTriangle,
@@ -35,12 +35,15 @@ import { useCrisisMode } from "@/components/crisis-mode";
 import { useRouter } from "next/navigation";
 
 /* ─── TraceBridge Logo ─── */
-function TraceBridgeLogo({ className = "h-7 w-7" }: { className?: string }) {
+function TraceBridgeLogo() {
   return (
-    <img
+    <Image
       src="/logo.png"
       alt="TraceBridge"
-      className={`${className} object-contain`}
+      width={32}
+      height={32}
+      className="h-8 w-8 brightness-0 dark:invert"
+      unoptimized
     />
   );
 }
@@ -88,7 +91,7 @@ export function Navbar() {
       {/* ─── Mobile top bar ─── */}
       <div className="fixed top-0 left-0 right-0 z-50 flex h-12 items-center justify-between border-b border-slate-200 bg-white/80 backdrop-blur-xl px-4 md:hidden">
         <Link href="/" className="flex items-center">
-          <TraceBridgeLogo className="h-9 w-auto" />
+          <TraceBridgeLogo />
         </Link>
         <button
           className="p-1.5 rounded-md hover:bg-muted transition-colors"
@@ -169,7 +172,7 @@ export function Navbar() {
               collapsed && "justify-center"
             )}
           >
-            <TraceBridgeLogo className={collapsed ? "h-10 w-10" : "h-16 w-auto"} />
+            <TraceBridgeLogo />
           </Link>
         </div>
 

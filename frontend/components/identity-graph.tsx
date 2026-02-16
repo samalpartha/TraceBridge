@@ -1,27 +1,16 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  User,
-  MapPin,
-  Database,
-  Tag,
-  Eye,
-  Shield,
-  Zap,
   X,
   ZoomIn,
   ZoomOut,
   Maximize2,
-  Filter,
-  Fingerprint,
-  Radio,
-  Layers,
   Search,
   Activity,
+  Eye,
 } from "lucide-react";
 
 /* ─── Types ─── */
@@ -35,8 +24,13 @@ interface GraphNode {
   y: number;
   vx: number;
   vy: number;
-  // Extra data
-  [key: string]: any;
+  status?: string;
+  age?: number;
+  description?: string;
+  case_id?: string;
+  lat?: number;
+  lng?: number;
+  record_count?: number;
 }
 
 interface GraphEdge {
@@ -46,12 +40,16 @@ interface GraphEdge {
   weight: number;
   color: string;
   label: string;
-  [key: string]: any;
+  fused?: number;
+  vision?: number;
+  rag?: number;
+  geo?: number;
 }
 
 interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  node_colors?: Record<string, string>;
   stats: {
     total_nodes: number;
     total_edges: number;
@@ -60,15 +58,6 @@ interface GraphData {
   };
 }
 
-/* ─── Node icon mapping ─── */
-const nodeIcons: Record<string, typeof User> = {
-  person: User,
-  location: MapPin,
-  source: Database,
-  descriptor: Tag,
-  sighting: Eye,
-  match: Fingerprint,
-};
 
 const nodeRadius: Record<string, number> = {
   person: 18,
@@ -414,9 +403,8 @@ export function IdentityGraphViz({ height = 600 }: { height?: number }) {
         <div className="flex flex-wrap gap-1">
           <button
             onClick={() => setFilterType(null)}
-            className={`rounded-full px-2 py-0.5 text-[9px] font-medium border transition-colors ${
-              !filterType ? "bg-foreground text-background" : "bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground"
-            }`}
+            className={`rounded-full px-2 py-0.5 text-[9px] font-medium border transition-colors ${!filterType ? "bg-foreground text-background" : "bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground"
+              }`}
           >
             All ({graphData.stats.total_nodes})
           </button>
@@ -424,12 +412,11 @@ export function IdentityGraphViz({ height = 600 }: { height?: number }) {
             <button
               key={type}
               onClick={() => setFilterType(filterType === type ? null : type)}
-              className={`rounded-full px-2 py-0.5 text-[9px] font-medium border transition-colors flex items-center gap-1 ${
-                filterType === type ? "text-white" : "bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground"
-              }`}
-              style={filterType === type ? { backgroundColor: (graphData as any).node_colors?.[type] || "#6b7280" } : {}}
+              className={`rounded-full px-2 py-0.5 text-[9px] font-medium border transition-colors flex items-center gap-1 ${filterType === type ? "text-white" : "bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground"
+                }`}
+              style={filterType === type ? { backgroundColor: (graphData.node_colors?.[type] || "#6b7280") as string } : {}}
             >
-              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: (graphData as any).node_colors?.[type] || "#6b7280" }} />
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: (graphData.node_colors?.[type] || "#6b7280") as string }} />
               {type} ({count})
             </button>
           ))}
@@ -516,7 +503,7 @@ export function IdentityGraphViz({ height = 600 }: { height?: number }) {
                   fontWeight={600}
                   fill={e.color}
                 >
-                  {Math.round((e.fused || e.weight) * 100)}%
+                  {String(e.fused || e.weight || 0)}%
                 </text>
               );
             })}
@@ -578,10 +565,10 @@ export function IdentityGraphViz({ height = 600 }: { height?: number }) {
                   className="select-none"
                 >
                   {n.type === "person" ? "P" :
-                   n.type === "location" ? "L" :
-                   n.type === "source" ? "S" :
-                   n.type === "descriptor" ? "D" :
-                   n.type === "sighting" ? "E" : "?"}
+                    n.type === "location" ? "L" :
+                      n.type === "source" ? "S" :
+                        n.type === "descriptor" ? "D" :
+                          n.type === "sighting" ? "E" : "?"}
                 </text>
               </g>
             );

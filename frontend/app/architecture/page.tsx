@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  ArrowRight,
   Brain,
   Camera,
   Database,
@@ -14,24 +13,22 @@ import {
   Globe,
   Layers,
   MapPin,
+  Users,
+  FileText,
+  GitBranch,
+  History,
+  Lock,
   Mic,
+  Network,
   Radio,
   Search,
   Send,
   Shield,
-  Zap,
-  Users,
-  Activity,
-  FileText,
-  GitBranch,
-  Lock,
-  BarChart3,
-  Cpu,
-  Network,
-  History,
-  Fingerprint,
   Shirt,
-  Tag,
+  Zap,
+  Cpu,
+  Fingerprint,
+  BarChart3,
 } from "lucide-react";
 
 /* ─── Pipeline stage definitions ─── */
@@ -322,20 +319,18 @@ export default function ArchitecturePage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${parseFloat(edge.score) * 100}%` }}
                       transition={{ delay: 0.5 + i * 0.05, duration: 0.8 }}
-                      className={`h-full rounded-full ${
-                        edge.confidence === "high" ? "bg-green-500" :
+                      className={`h-full rounded-full ${edge.confidence === "high" ? "bg-green-500" :
                         edge.confidence === "medium" ? "bg-amber-500" : "bg-red-400"
-                      }`}
+                        }`}
                     />
                   </div>
                   <span className="font-mono w-10 text-right">{edge.score}</span>
                   <Badge
                     variant="outline"
-                    className={`text-[9px] px-1.5 py-0 w-16 text-center justify-center ${
-                      edge.confidence === "high" ? "text-green-600 border-green-200" :
+                    className={`text-[9px] px-1.5 py-0 w-16 text-center justify-center ${edge.confidence === "high" ? "text-green-600 border-green-200" :
                       edge.confidence === "medium" ? "text-amber-600 border-amber-200" :
-                      "text-red-600 border-red-200"
-                    }`}
+                        "text-red-600 border-red-200"
+                      }`}
                   >
                     {edge.confidence}
                   </Badge>
@@ -393,7 +388,7 @@ export default function ArchitecturePage() {
                   { name: "Server-Sent Events", desc: "Real-time search progress streaming" },
                 ],
               },
-            ].map((cat, i) => {
+            ].map((cat) => {
               const CIcon = cat.icon;
               return (
                 <div key={cat.category}>

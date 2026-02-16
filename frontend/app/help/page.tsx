@@ -10,30 +10,27 @@ import {
   Heart,
   Users,
   Search,
-  Shield,
   Send,
-  MapPin,
   Radio,
-  LayoutDashboard,
-  FolderSearch,
-  Camera,
   FileText,
-  Eye,
   Zap,
-  ChevronDown,
-  ChevronRight,
-  ArrowRight,
-  CheckCircle,
-  AlertTriangle,
   HelpCircle,
   Layers,
   Database,
   Globe,
   Sparkles,
   Bot,
-  Phone,
   Building2,
   ClipboardList,
+  Eye,
+  LayoutDashboard,
+  MapPin,
+  ChevronDown,
+  ChevronRight,
+  ArrowRight,
+  AlertTriangle,
+  Shield,
+  FolderSearch,
 } from "lucide-react";
 
 /* ─── User Flows ─────────────────────────────────────────── */
@@ -441,9 +438,8 @@ export default function HelpPage() {
                           <div key={i} className="flex gap-3">
                             {/* Step number */}
                             <div className="flex flex-col items-center">
-                              <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                                flow.bgColor.replace("50", "500").replace("bg-", "bg-")
-                              } ${flow.color.replace("text-", "bg-").replace("600", "500")}`}>
+                              <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white ${flow.bgColor.replace("50", "500").replace("bg-", "bg-")
+                                } ${flow.color.replace("text-", "bg-").replace("600", "500")}`}>
                                 {i + 1}
                               </div>
                               {i < flow.steps.length - 1 && (

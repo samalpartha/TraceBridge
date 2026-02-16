@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
   Shield,
   ExternalLink,
@@ -14,13 +12,8 @@ import {
   Eye,
   Lock,
   CheckCircle,
-  AlertTriangle,
-  Clock,
   Database,
-  FileText,
-  Globe,
   Info,
-  Search,
   Loader2,
 } from "lucide-react";
 
@@ -96,11 +89,10 @@ export function BiometricsIndicator({
         return (
           <div
             key={item.label}
-            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${
-              item.available
-                ? "border-green-200 bg-green-50/50 text-green-700"
-                : "border-muted text-muted-foreground"
-            }`}
+            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${item.available
+              ? "border-green-200 bg-green-50/50 text-green-700"
+              : "border-muted text-muted-foreground"
+              }`}
           >
             <Icon className="h-2.5 w-2.5" />
             {item.label}
@@ -117,8 +109,22 @@ export function BiometricsIndicator({
 }
 
 /* ─── NamUs Status Block for Command Center ─── */
+interface NamusStats {
+  total_records: number;
+  missing_persons: number;
+  unidentified_persons: number;
+  biometrics: {
+    dna_available: number;
+    dental_available: number;
+    fingerprints_available: number;
+    family_dna_reference: number;
+  };
+  states_covered: string[];
+  source: string;
+}
+
 export function NamusStatusBlock() {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<NamusStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

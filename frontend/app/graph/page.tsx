@@ -12,7 +12,6 @@ import {
   Tag,
   Eye,
   Fingerprint,
-  ArrowRight,
   Zap,
   Shield,
   Brain,

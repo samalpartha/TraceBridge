@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
   Settings2,
@@ -135,11 +134,10 @@ export function WorkspaceSelector() {
           <button
             key={r.id}
             onClick={() => setActiveRegion(r.id)}
-            className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs transition-colors ${
-              activeRegion === r.id
+            className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs transition-colors ${activeRegion === r.id
                 ? "bg-primary/10 text-primary font-medium"
                 : "text-muted-foreground hover:bg-muted"
-            }`}
+              }`}
           >
             <span>{r.label}</span>
             <Badge variant="outline" className="text-[9px]">{r.cases}</Badge>

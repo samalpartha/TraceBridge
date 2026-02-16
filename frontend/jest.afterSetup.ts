@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import React from "react";
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
@@ -16,22 +17,21 @@ jest.mock("next/navigation", () => ({
 
 // Mock next/link
 jest.mock("next/link", () => {
-  const React = require("react");
   return {
     __esModule: true,
-    default: React.forwardRef(function MockLink(props: any, ref: any) {
-      const { children, href, ...rest } = props;
-      return React.createElement("a", { href, ref, ...rest }, children);
-    }),
+    default: React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement>>(
+      function MockLink({ children, href, ...rest }, ref) {
+        return React.createElement("a", { href: href as string, ref, ...rest }, children);
+      }
+    ),
   };
 });
 
 // Mock next/image
 jest.mock("next/image", () => {
-  const React = require("react");
   return {
     __esModule: true,
-    default: function MockImage(props: any) {
+    default: function MockImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
       return React.createElement("img", props);
     },
   };

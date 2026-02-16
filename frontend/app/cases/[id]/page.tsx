@@ -1,6 +1,7 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCaseDetail } from "@/hooks/use-case";
 import { useSearchStream } from "@/hooks/use-sse";
@@ -20,28 +21,23 @@ import {
   User,
   MapPin,
   Calendar,
-  Phone,
   Loader2,
   Send,
-  RefreshCw,
-  Zap,
   Shield,
   AlertTriangle,
   Clock,
-  CheckCircle,
-  TrendingUp,
+  Sparkles,
+  Zap,
   Eye,
-  ArrowRight,
-  Heart,
-  Activity,
   Brain,
+  RefreshCw,
+  TrendingUp,
+  FileText,
   Timer,
+  Phone,
   Baby,
   Flame,
-  Radio,
   FileWarning,
-  FileText,
-  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -86,7 +82,7 @@ function getCaseRiskSignals(caseData: {
     signals.push({
       label: "Unaccompanied Minor",
       value: 25,
-      description: `Age ${caseData.age} — highest vulnerability bracket. AMBER-level priority.`,
+      description: `Age ${caseData.age} — highest vulnerability bracket.AMBER - level priority.`,
       icon: Baby,
       severity: "critical",
     });
@@ -105,7 +101,7 @@ function getCaseRiskSignals(caseData: {
     signals.push({
       label: "Extended Duration",
       value: 25,
-      description: `${daysSince} days since reported. Probability of safe recovery decreases after 72h.`,
+      description: `${daysSince} days since reported.Probability of safe recovery decreases after 72h.`,
       icon: Timer,
       severity: "critical",
     });
@@ -113,7 +109,7 @@ function getCaseRiskSignals(caseData: {
     signals.push({
       label: "Prolonged Missing",
       value: 15,
-      description: `${daysSince} days elapsed. Escalation recommended.`,
+      description: `${daysSince} days elapsed.Escalation recommended.`,
       icon: Clock,
       severity: "high",
     });
@@ -121,7 +117,7 @@ function getCaseRiskSignals(caseData: {
     signals.push({
       label: "Time Pressure",
       value: 8,
-      description: `${daysSince} days since reported. Within critical first-week window.`,
+      description: `${daysSince} days since reported.Within critical first - week window.`,
       icon: Clock,
       severity: "medium",
     });
@@ -217,7 +213,7 @@ function getSuggestedActions(
 
   if (pendingMatches > 0) {
     actions.push({
-      text: `Review ${pendingMatches} pending match${pendingMatches > 1 ? "es" : ""}`,
+      text: `Review ${pendingMatches} pending match${pendingMatches > 1 ? "es" : ""} `,
       description: "AI has identified potential matches awaiting human verification. Each match includes multi-modal evidence.",
       icon: Shield,
       priority: "immediate",
@@ -290,9 +286,9 @@ function SLATimer({ createdAt, status }: { createdAt?: string; status: string })
       }
 
       if (hours > 0) {
-        setElapsed(`${hours}h ${mins}m ${secs}s`);
+        setElapsed(`${hours}h ${mins}m ${secs} s`);
       } else {
-        setElapsed(`${mins}m ${secs}s`);
+        setElapsed(`${mins}m ${secs} s`);
       }
     };
     update();
@@ -315,7 +311,7 @@ function SLATimer({ createdAt, status }: { createdAt?: string; status: string })
 export default function CaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { caseData, matches, loading, refresh } = useCaseDetail(id);
-  const { events, isRunning, isComplete, startSearch } = useSearchStream();
+  const { events, isRunning, startSearch } = useSearchStream();
   const [searchLoading, setSearchLoading] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
@@ -356,7 +352,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
   const handleVerify = async (matchId: string, action: string) => {
     try {
       await verifyMatch(matchId, action);
-      toast.success(`Match ${action}ed`);
+      toast.success(`Match ${action} ed`);
       refresh();
     } catch (err) {
       toast.error((err as Error).message);
@@ -454,17 +450,16 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card className={`border-l-4 ${
-          risk.level === "Critical" ? "border-l-red-500 bg-red-50/20" :
+        <Card className={`border - l - 4 ${risk.level === "Critical" ? "border-l-red-500 bg-red-50/20" :
           risk.level === "High" ? "border-l-amber-500 bg-amber-50/20" :
-          "border-l-blue-500 bg-blue-50/20"
-        }`}>
+            "border-l-blue-500 bg-blue-50/20"
+          } `}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-4">
                 {/* Risk Score Circle */}
-                <div className={`h-14 w-14 rounded-full flex items-center justify-center border-2 ${risk.borderColor} ${risk.bgColor}`}>
-                  <span className={`text-xl font-bold ${risk.color}`}>{risk.score}</span>
+                <div className={`h - 14 w - 14 rounded - full flex items - center justify - center border - 2 ${risk.borderColor} ${risk.bgColor} `}>
+                  <span className={`text - xl font - bold ${risk.color} `}>{risk.score}</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -503,11 +498,14 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
           <CardContent className="p-6">
             <div className="flex gap-6">
               {photoUrl && !imgError ? (
-                <img
-                  src={`${API_URL}${photoUrl}`}
+                <Image
+                  src={`${API_URL}${photoUrl.trim()}`}
                   alt={caseData.person_name}
+                  width={128}
+                  height={128}
                   className="h-32 w-32 rounded-xl object-cover border"
                   onError={() => setImgError(true)}
+                  unoptimized
                 />
               ) : (
                 <div className="h-32 w-32 rounded-xl bg-muted flex items-center justify-center">
@@ -547,7 +545,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
         </Card>
 
         {/* Right: Risk Signal Breakdown */}
-        <Card className={`${risk.borderColor}`}>
+        <Card className={`${risk.borderColor} `}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center gap-2">
               <Brain className="h-4 w-4 text-primary" />
@@ -559,9 +557,9 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-muted-foreground">Composite Score</span>
-                <span className={`font-bold ${risk.color}`}>{risk.score}/100</span>
+                <span className={`font - bold ${risk.color} `}>{risk.score}/100</span>
               </div>
-              <Progress value={risk.score} className={`h-2 ${risk.progressColor}`} />
+              <Progress value={risk.score} className={`h - 2 ${risk.progressColor} `} />
             </div>
 
             {/* Individual signals */}
@@ -577,13 +575,13 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                     className="rounded-lg border p-2.5"
                   >
                     <div className="flex items-start gap-2">
-                      <div className={`rounded p-1 ${severityColors[signal.severity]} border`}>
+                      <div className={`rounded p - 1 ${severityColors[signal.severity]} border`}>
                         <SIcon className="h-3 w-3" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-medium">{signal.label}</span>
-                          <span className={`text-xs font-bold ${signal.value > 0 ? "text-red-600" : "text-blue-600"}`}>
+                          <span className={`text - xs font - bold ${signal.value > 0 ? "text-red-600" : "text-blue-600"} `}>
                             {signal.value > 0 ? "+" : ""}{signal.value}
                           </span>
                         </div>
@@ -618,8 +616,8 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                 {isRunning
                   ? "Agents scanning..."
                   : caseData.media_assets && caseData.media_assets.length > 0
-                  ? "Run Vision + Records Scan"
-                  : "Run Cross-Source Match"}
+                    ? "Run Vision + Records Scan"
+                    : "Run Cross-Source Match"}
               </Button>
               <Button
                 variant="outline"
@@ -656,28 +654,24 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.06 }}
-                    className={`rounded-lg border p-3 ${
-                      action.priority === "immediate" ? "border-primary/30 bg-primary/5" : ""
-                    }`}
+                    className={`rounded - lg border p - 3 ${action.priority === "immediate" ? "border-primary/30 bg-primary/5" : ""
+                      } `}
                   >
                     <div className="flex items-start gap-2.5">
-                      <div className={`rounded-lg p-1.5 ${
-                        action.priority === "immediate" ? "bg-primary/10" : "bg-muted"
-                      }`}>
-                        <AIcon className={`h-3.5 w-3.5 ${
-                          action.priority === "immediate" ? "text-primary" : "text-muted-foreground"
-                        }`} />
+                      <div className={`rounded - lg p - 1.5 ${action.priority === "immediate" ? "bg-primary/10" : "bg-muted"
+                        } `}>
+                        <AIcon className={`h - 3.5 w - 3.5 ${action.priority === "immediate" ? "text-primary" : "text-muted-foreground"
+                          } `} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium">{action.text}</span>
                           <Badge
                             variant="outline"
-                            className={`text-[9px] px-1.5 py-0 ${
-                              action.priority === "immediate"
-                                ? "border-red-200 text-red-600 bg-red-50"
-                                : "border-blue-200 text-blue-600 bg-blue-50"
-                            }`}
+                            className={`text - [9px] px - 1.5 py - 0 ${action.priority === "immediate"
+                              ? "border-red-200 text-red-600 bg-red-50"
+                              : "border-blue-200 text-blue-600 bg-blue-50"
+                              } `}
                           >
                             {action.priority}
                           </Badge>
@@ -806,29 +800,29 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
               {matches
                 .sort((a, b) => (b.fused_score || 0) - (a.fused_score || 0))
                 .map((match, i) => (
-                <motion.div
-                  key={match.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="space-y-2"
-                >
-                  <MatchEvidenceCard match={match} onVerify={handleVerify} />
-                  {match.status === "approved" && (
-                    <div className="flex gap-2 pl-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-2 text-xs"
-                        onClick={() => handleOutreach(match.id)}
-                      >
-                        <Send className="h-3 w-3" />
-                        Trigger NGO Outreach
-                      </Button>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
+                  <motion.div
+                    key={match.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="space-y-2"
+                  >
+                    <MatchEvidenceCard match={match} onVerify={handleVerify} />
+                    {match.status === "approved" && (
+                      <div className="flex gap-2 pl-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-2 text-xs"
+                          onClick={() => handleOutreach(match.id)}
+                        >
+                          <Send className="h-3 w-3" />
+                          Trigger NGO Outreach
+                        </Button>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
             </div>
           )}
         </div>
@@ -870,19 +864,17 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
             {/* AI-generated leads from matches */}
             {matches.slice(0, 4).map((m, i) => (
               <div
-                key={`lead-match-${m.id}`}
-                className={`grid grid-cols-12 gap-2 items-center rounded-lg border p-2 text-xs ${
-                  m.status === "approved" ? "border-green-200 bg-green-50/30" : ""
-                }`}
+                key={`lead - match - ${m.id} `}
+                className={`grid grid - cols - 12 gap - 2 items - center rounded - lg border p - 2 text - xs ${m.status === "approved" ? "border-green-200 bg-green-50/30" : ""
+                  } `}
               >
                 <div className="col-span-1 font-mono text-muted-foreground">{i + 1}</div>
                 <div className="col-span-3 truncate font-medium">{m.person_name || "AI Match"}</div>
                 <div className="col-span-2">
-                  <Badge variant="outline" className={`text-[9px] ${
-                    m.status === "approved" ? "text-green-600 border-green-200" :
+                  <Badge variant="outline" className={`text - [9px] ${m.status === "approved" ? "text-green-600 border-green-200" :
                     m.status === "rejected" ? "text-red-600 border-red-200" :
-                    "text-amber-600 border-amber-200"
-                  }`}>
+                      "text-amber-600 border-amber-200"
+                    } `}>
                     {m.status}
                   </Badge>
                 </div>
@@ -959,7 +951,6 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
       <TinyFishActions
         caseId={caseData.id}
         personName={caseData.person_name}
-        caseStatus={caseData.status}
       />
     </div>
   );

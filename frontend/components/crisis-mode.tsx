@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Keyboard, X } from "lucide-react";
 
 /* ─── Crisis Mode Context ─── */
@@ -13,7 +12,7 @@ type CrisisModeContextType = {
 
 const CrisisModeContext = createContext<CrisisModeContextType>({
   crisisMode: false,
-  setCrisisMode: () => {},
+  setCrisisMode: () => { },
 });
 
 export function useCrisisMode() {
@@ -77,16 +76,16 @@ function KeyboardShortcutPanel({
 
 /* ─── Provider ─── */
 export function CrisisModeProvider({ children }: { children: React.ReactNode }) {
-  const [crisisMode, setCrisisMode] = useState(false);
+  const [crisisMode, setCrisisMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("tb-crisis-mode") === "true";
+    }
+    return false;
+  });
   const [showShortcuts, setShowShortcuts] = useState(false);
   const router = useRouter();
 
   // Persist crisis mode
-  useEffect(() => {
-    const saved = localStorage.getItem("tb-crisis-mode");
-    if (saved === "true") setCrisisMode(true);
-  }, []);
-
   useEffect(() => {
     localStorage.setItem("tb-crisis-mode", String(crisisMode));
     if (crisisMode) {

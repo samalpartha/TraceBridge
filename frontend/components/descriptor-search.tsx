@@ -5,22 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import {
   Search,
   Loader2,
-  Eye,
   FileText,
   MapPin,
-  Zap,
-  AlertTriangle,
-  CheckCircle,
   History,
   Fingerprint,
   Tag,
-  Shirt,
 } from "lucide-react";
 
 /* ─── Simulated cold/legacy case records ─── */
@@ -135,7 +129,7 @@ function scoreMatch(query: string, record: typeof legacyCaseDB[0]): number {
   if (words.length === 0) return 0;
 
   let hits = 0;
-  let total = words.length;
+  const total = words.length;
   const searchText = [
     record.narrative,
     ...Object.values(record.descriptors),
@@ -327,11 +321,10 @@ export function DescriptorSearch() {
                             <Badge variant="outline" className="text-[9px]">{r.record.id}</Badge>
                             <Badge
                               variant="outline"
-                              className={`text-[9px] ${
-                                r.record.status === "Unresolved"
+                              className={`text-[9px] ${r.record.status === "Unresolved"
                                   ? "border-amber-200 text-amber-600"
                                   : "border-green-200 text-green-600"
-                              }`}
+                                }`}
                             >
                               {r.record.status}
                             </Badge>
@@ -347,15 +340,13 @@ export function DescriptorSearch() {
                         </div>
 
                         {/* Score */}
-                        <div className={`text-center rounded-lg border p-2 ${
-                          r.score > 0.5 ? "bg-green-50 border-green-200" :
-                          r.score > 0.3 ? "bg-amber-50 border-amber-200" :
-                          "bg-muted/50"
-                        }`}>
-                          <div className={`text-lg font-bold ${
-                            r.score > 0.5 ? "text-green-700" :
-                            r.score > 0.3 ? "text-amber-700" : "text-muted-foreground"
+                        <div className={`text-center rounded-lg border p-2 ${r.score > 0.5 ? "bg-green-50 border-green-200" :
+                            r.score > 0.3 ? "bg-amber-50 border-amber-200" :
+                              "bg-muted/50"
                           }`}>
+                          <div className={`text-lg font-bold ${r.score > 0.5 ? "text-green-700" :
+                              r.score > 0.3 ? "text-amber-700" : "text-muted-foreground"
+                            }`}>
                             {Math.round(r.score * 100)}%
                           </div>
                           <div className="text-[9px] text-muted-foreground">Relevance</div>

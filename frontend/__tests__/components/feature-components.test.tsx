@@ -4,6 +4,7 @@
  */
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+import type { Case, MatchCandidate } from "@/lib/types";
 
 // ── Mock providers ───────────────────────────────────────────────
 
@@ -16,114 +17,101 @@ jest.mock("@/components/crisis-mode", () => ({
   CrisisModeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-jest.mock("recharts", () => ({
-  ResponsiveContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
-  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
-  BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
-  Line: () => null,
-  Bar: () => null,
-  XAxis: () => null,
-  YAxis: () => null,
-  CartesianGrid: () => null,
-  Tooltip: () => null,
-  Legend: () => null,
-  Area: () => null,
-  AreaChart: ({ children }: any) => <div data-testid="area-chart">{children}</div>,
-  PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
-  Pie: () => null,
-  Cell: () => null,
-}));
-
-jest.mock("@vis.gl/react-google-maps", () => ({
-  APIProvider: ({ children }: any) => <div>{children}</div>,
-  Map: ({ children }: any) => <div data-testid="google-map">{children}</div>,
-  AdvancedMarker: ({ children }: any) => <div>{children}</div>,
-  useMap: () => null,
-}));
-
-jest.mock("framer-motion", () => {
-  const React = require("react");
-  const actual = jest.requireActual("framer-motion");
-  const motion = {
-    div: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <div ref={ref} {...validProps}>{children}</div>;
-    }),
-    span: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <span ref={ref} {...validProps}>{children}</span>;
-    }),
-    button: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <button ref={ref} {...validProps}>{children}</button>;
-    }),
-    li: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <li ref={ref} {...validProps}>{children}</li>;
-    }),
-    path: React.forwardRef((props: any, ref: any) => <path ref={ref} {...props} />),
-    h1: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <h1 ref={ref} {...validProps}>{children}</h1>;
-    }),
-    h2: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <h2 ref={ref} {...validProps}>{children}</h2>;
-    }),
-    p: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <p ref={ref} {...validProps}>{children}</p>;
-    }),
-    a: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <a ref={ref} {...validProps}>{children}</a>;
-    }),
-    section: React.forwardRef(({ children, ...props }: any, ref: any) => {
-      const {
-        initial, animate, exit, variants, transition,
-        whileHover, whileTap, whileInView, viewport,
-        layout, layoutId, ...validProps
-      } = props;
-      return <section ref={ref} {...validProps}>{children}</section>;
-    }),
+jest.mock("recharts", () => {
+  const MockComp = (name: string) => {
+    const C = ({ children }: { children?: React.ReactNode }) => <div data-testid={name.toLowerCase()}>{children}</div>;
+    C.displayName = name;
+    return C;
   };
+  const NullComp = (name: string) => {
+    const C = () => null;
+    C.displayName = name;
+    return C;
+  };
+  return {
+    ResponsiveContainer: MockComp("ResponsiveContainer"),
+    LineChart: MockComp("LineChart"),
+    BarChart: MockComp("BarChart"),
+    AreaChart: MockComp("AreaChart"),
+    PieChart: MockComp("PieChart"),
+    Line: NullComp("Line"),
+    Bar: NullComp("Bar"),
+    XAxis: NullComp("XAxis"),
+    YAxis: NullComp("YAxis"),
+    CartesianGrid: NullComp("CartesianGrid"),
+    Tooltip: NullComp("Tooltip"),
+    Legend: NullComp("Legend"),
+    Area: NullComp("Area"),
+    Pie: NullComp("Pie"),
+    Cell: NullComp("Cell"),
+  };
+});
+
+jest.mock("@vis.gl/react-google-maps", () => {
+  const MockComp = (name: string) => {
+    const C = ({ children }: { children?: React.ReactNode }) => <div data-testid={name.toLowerCase()}>{children}</div>;
+    C.displayName = name;
+    return C;
+  };
+  return {
+    APIProvider: MockComp("APIProvider"),
+    Map: MockComp("Map"),
+    AdvancedMarker: MockComp("AdvancedMarker"),
+    useMap: () => null,
+  };
+});
+
+// Mock framer-motion to avoid unknown prop warnings
+jest.mock("framer-motion", () => {
+  const ActualReact = jest.requireActual("react");
+  const actual = jest.requireActual("framer-motion");
+
+  interface MockProps extends Record<string, unknown> {
+    children?: React.ReactNode;
+  }
+
+  const createMockComponent = (tag: string) => {
+    const Component = ActualReact.forwardRef(function MockComponent(
+      { children, ...props }: MockProps,
+      ref: React.Ref<HTMLElement | SVGElement>
+    ) {
+      // Omit framer-motion props
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      const {
+        initial: _i, animate: _a, exit: _e, variants: _v, transition: _t,
+        whileHover: _wh, whileTap: _wt, whileInView: _wiv, viewport: _vp,
+        layout: _l, layoutId: _lid, ...validProps
+      } = props;
+      /* eslint-enable @typescript-eslint/no-unused-vars */
+      return ActualReact.createElement(tag, { ref, ...validProps }, children);
+    });
+    Component.displayName = `Motion${tag.charAt(0).toUpperCase() + tag.slice(1)}`;
+    return Component;
+  };
+
+  const PathComponent = ActualReact.forwardRef((props: React.SVGProps<SVGPathElement>, ref: React.Ref<SVGPathElement>) => <path ref={ref} {...props} />);
+  PathComponent.displayName = "MotionPath";
+
+  const motionMock = {
+    div: createMockComponent("div"),
+    span: createMockComponent("span"),
+    button: createMockComponent("button"),
+    li: createMockComponent("li"),
+    path: PathComponent,
+    h1: createMockComponent("h1"),
+    h2: createMockComponent("h2"),
+    p: createMockComponent("p"),
+    a: createMockComponent("a"),
+    section: createMockComponent("section"),
+  };
+
+  const AnimatePresenceMock = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+  AnimatePresenceMock.displayName = "AnimatePresenceMock";
 
   return {
     ...actual,
-    motion,
-    AnimatePresence: ({ children }: any) => <>{children}</>,
+    motion: motionMock,
+    AnimatePresence: AnimatePresenceMock,
     useAnimation: () => ({ start: jest.fn() }),
     useInView: () => true,
   };
@@ -191,18 +179,18 @@ describe("CaseCard", () => {
   };
 
   it("renders person name and status", () => {
-    render(<CaseCard caseData={caseData} />);
+    render(<CaseCard caseData={caseData as Case} />);
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText(/searching/i)).toBeInTheDocument();
   });
 
   it("shows location", () => {
-    render(<CaseCard caseData={caseData} />);
+    render(<CaseCard caseData={caseData as Case} />);
     expect(screen.getByText(/New York/i)).toBeInTheDocument();
   });
 
   it("shows age", () => {
-    render(<CaseCard caseData={caseData} />);
+    render(<CaseCard caseData={caseData as Case} />);
     expect(screen.getByText(/Age 32/)).toBeInTheDocument();
   });
 });
@@ -230,17 +218,17 @@ describe("MatchEvidenceCard", () => {
   };
 
   it("renders match score", () => {
-    render(<MatchEvidenceCard match={match} />);
+    render(<MatchEvidenceCard match={match as MatchCandidate} />);
     expect(screen.getByText(/82/)).toBeInTheDocument();
   });
 
   it("shows person name", () => {
-    render(<MatchEvidenceCard match={match} />);
+    render(<MatchEvidenceCard match={match as MatchCandidate} />);
     expect(screen.getByText(/Possible Match/i)).toBeInTheDocument();
   });
 
   it("shows evidence signal badges", () => {
-    render(<MatchEvidenceCard match={match} />);
+    render(<MatchEvidenceCard match={match as MatchCandidate} />);
     expect(screen.getByText(/Face/i)).toBeInTheDocument();
   });
 });

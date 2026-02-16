@@ -11,7 +11,6 @@ import {
   Building2,
   Globe,
   Shield,
-  Users,
   Server,
   Heart,
   ArrowRight,

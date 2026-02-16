@@ -15,7 +15,6 @@ import {
   Eye,
   Activity,
   Heart,
-  Clock,
   Search,
   LayoutGrid,
   List,

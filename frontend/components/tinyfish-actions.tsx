@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,10 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Send,
   Phone,
-  Radio,
-  FileText,
   Shield,
-  AlertTriangle,
   CheckCircle,
   Loader2,
   Copy,
@@ -20,7 +16,6 @@ import {
   MessageSquare,
   PhoneCall,
   Building2,
-  Users,
   ClipboardList,
   Zap,
   Heart,
@@ -32,19 +27,42 @@ import {
   tfAgencyPack,
   tfCallAssist,
   tfClosure,
-  tfEscalate,
 } from "@/lib/api-client";
 
 interface TinyFishActionsProps {
   caseId: string;
   personName: string;
-  caseStatus: string;
-  slaHours?: number;
+}
+
+interface OutreachPlan {
+  contact_plan: Array<{ type: string; target: string; priority: number }>;
+  messages: Record<string, string>;
+  next_steps: string[];
+}
+
+interface AgencyPack {
+  consent_status: string;
+  summary: string;
+  last_seen: string;
+  identifiers: Array<{ type: string; value: string }>;
+  checklist: string[];
+  contact_back: string;
+}
+
+interface CallAssist {
+  script: string;
+  note_template: { fields_to_capture: string[] };
+  suggested_next_calls: Array<{ target: string; reason: string; priority: string }>;
+}
+
+interface ClosureWorkflow {
+  closure_steps: Array<{ step: number; action: string; detail: string }>;
+  notifications: Array<{ channel: string; recipient: string; message: string }>;
 }
 
 /* ─── Outreach Plan Tab ─── */
-function OutreachTab({ caseId, personName }: { caseId: string; personName: string }) {
-  const [plan, setPlan] = useState<any>(null);
+function OutreachTab({ caseId }: { caseId: string }) {
+  const [plan, setPlan] = useState<OutreachPlan | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeChannel, setActiveChannel] = useState<string>("email");
 
@@ -58,8 +76,8 @@ function OutreachTab({ caseId, personName }: { caseId: string; personName: strin
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await tfOutreachPlan(caseId);
-      setPlan(res.fallback || res.tinyfish_result);
+      const res = await tfOutreachPlan(caseId) as unknown as { fallback?: OutreachPlan; tinyfish_result?: OutreachPlan };
+      setPlan(res.fallback || res.tinyfish_result || null);
       toast.success("Outreach plan generated via TinyFish");
     } catch {
       toast.error("Failed to generate plan");
@@ -86,7 +104,7 @@ function OutreachTab({ caseId, personName }: { caseId: string; personName: strin
           <div>
             <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">Contact Plan</h4>
             <div className="space-y-1.5">
-              {plan.contact_plan?.map((c: any, i: number) => (
+              {plan.contact_plan?.map((c, i) => (
                 <div key={i} className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-[9px] capitalize">{c.type}</Badge>
@@ -144,7 +162,7 @@ function OutreachTab({ caseId, personName }: { caseId: string; personName: strin
           <div>
             <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">Next Steps</h4>
             <div className="space-y-1">
-              {plan.next_steps?.map((s: string, i: number) => (
+              {plan.next_steps?.map((s, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs">
                   <CheckCircle className="h-3 w-3 text-green-500 shrink-0" />
                   {s}
@@ -164,7 +182,7 @@ function OutreachTab({ caseId, personName }: { caseId: string; personName: strin
 
 /* ─── Agency Pack Tab ─── */
 function AgencyPackTab({ caseId }: { caseId: string }) {
-  const [pack, setPack] = useState<any>(null);
+  const [pack, setPack] = useState<AgencyPack | null>(null);
   const [loading, setLoading] = useState(false);
   const [agency, setAgency] = useState("Red Cross");
 
@@ -173,8 +191,8 @@ function AgencyPackTab({ caseId }: { caseId: string }) {
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await tfAgencyPack(caseId, agency);
-      setPack(res.fallback || res.tinyfish_result);
+      const res = await tfAgencyPack(caseId, agency) as unknown as { fallback?: AgencyPack; tinyfish_result?: AgencyPack };
+      setPack(res.fallback || res.tinyfish_result || null);
       toast.success(`Agency pack generated for ${agency}`);
     } catch {
       toast.error("Failed to generate pack");
@@ -220,7 +238,7 @@ function AgencyPackTab({ caseId }: { caseId: string }) {
               <strong>Last seen:</strong> {pack.last_seen}
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {pack.identifiers?.map((id: any, i: number) => (
+              {pack.identifiers?.map((id, i) => (
                 <Badge key={i} variant="outline" className="text-[10px]">
                   {id.type}: {id.value}
                 </Badge>
@@ -250,7 +268,7 @@ function AgencyPackTab({ caseId }: { caseId: string }) {
 
 /* ─── Call Assist Tab ─── */
 function CallAssistTab({ caseId }: { caseId: string }) {
-  const [assist, setAssist] = useState<any>(null);
+  const [assist, setAssist] = useState<CallAssist | null>(null);
   const [loading, setLoading] = useState(false);
   const [callType, setCallType] = useState("inquiry");
 
@@ -264,7 +282,7 @@ function CallAssistTab({ caseId }: { caseId: string }) {
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await tfCallAssist(caseId, callType);
+      const res = await tfCallAssist(caseId, callType) as unknown as CallAssist;
       setAssist(res);
       toast.success("Call script ready");
     } catch {
@@ -316,7 +334,7 @@ function CallAssistTab({ caseId }: { caseId: string }) {
           <div>
             <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">Note Template — Capture These</h4>
             <div className="space-y-1">
-              {assist.note_template?.fields_to_capture?.map((f: string, i: number) => (
+              {assist.note_template?.fields_to_capture?.map((f, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs">
                   <ClipboardList className="h-3 w-3 text-muted-foreground shrink-0" />
                   {f}
@@ -328,7 +346,7 @@ function CallAssistTab({ caseId }: { caseId: string }) {
           {assist.suggested_next_calls?.length > 0 && (
             <div>
               <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">Suggested Next Calls</h4>
-              {assist.suggested_next_calls.map((c: any, i: number) => (
+              {assist.suggested_next_calls.map((c, i) => (
                 <div key={i} className="flex items-center justify-between rounded-lg border px-3 py-2 text-xs">
                   <div>
                     <span className="font-medium">{c.target}</span>
@@ -349,14 +367,14 @@ function CallAssistTab({ caseId }: { caseId: string }) {
 
 /* ─── Closure Tab ─── */
 function ClosureTab({ caseId, personName }: { caseId: string; personName: string }) {
-  const [closure, setClosure] = useState<any>(null);
+  const [closure, setClosure] = useState<ClosureWorkflow | null>(null);
   const [loading, setLoading] = useState(false);
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
 
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await tfClosure(caseId);
+      const res = await tfClosure(caseId) as unknown as ClosureWorkflow;
       setClosure(res);
       toast.success("Closure workflow loaded");
     } catch {
@@ -367,7 +385,11 @@ function ClosureTab({ caseId, personName }: { caseId: string; personName: string
 
   const toggleStep = (step: number) => {
     const next = new Set(checkedSteps);
-    next.has(step) ? next.delete(step) : next.add(step);
+    if (next.has(step)) {
+      next.delete(step);
+    } else {
+      next.add(step);
+    }
     setCheckedSteps(next);
   };
 
@@ -391,12 +413,11 @@ function ClosureTab({ caseId, personName }: { caseId: string; personName: string
               Closure Steps — {personName}
             </h4>
             <div className="space-y-2">
-              {closure.closure_steps?.map((s: any) => (
+              {closure.closure_steps?.map((s) => (
                 <div
                   key={s.step}
-                  className={`flex items-start gap-3 rounded-lg border p-3 transition-colors cursor-pointer ${
-                    checkedSteps.has(s.step) ? "bg-green-50 border-green-200" : "hover:bg-muted/50"
-                  }`}
+                  className={`flex items-start gap-3 rounded-lg border p-3 transition-colors cursor-pointer ${checkedSteps.has(s.step) ? "bg-green-50 border-green-200" : "hover:bg-muted/50"
+                    }`}
                   onClick={() => toggleStep(s.step)}
                 >
                   <input
@@ -419,7 +440,7 @@ function ClosureTab({ caseId, personName }: { caseId: string; personName: string
 
           <div>
             <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">Closure Notifications</h4>
-            {closure.notifications?.map((n: any, i: number) => (
+            {closure.notifications?.map((n, i) => (
               <div key={i} className="flex items-start gap-2 rounded-lg border px-3 py-2 text-xs mb-1.5">
                 <Badge variant="outline" className="text-[9px] shrink-0 capitalize">{n.channel}</Badge>
                 <div>
@@ -436,7 +457,7 @@ function ClosureTab({ caseId, personName }: { caseId: string; personName: string
 }
 
 /* ━━━ Main TinyFish Actions Panel ━━━ */
-export function TinyFishActions({ caseId, personName, caseStatus, slaHours }: TinyFishActionsProps) {
+export function TinyFishActions({ caseId, personName }: TinyFishActionsProps) {
   return (
     <Card className="border-blue-200/50 bg-gradient-to-br from-blue-50/30 to-background">
       <CardHeader className="pb-3">
@@ -469,7 +490,7 @@ export function TinyFishActions({ caseId, personName, caseStatus, slaHours }: Ti
           </TabsList>
 
           <TabsContent value="outreach" className="mt-3">
-            <OutreachTab caseId={caseId} personName={personName} />
+            <OutreachTab caseId={caseId} />
           </TabsContent>
 
           <TabsContent value="agency" className="mt-3">

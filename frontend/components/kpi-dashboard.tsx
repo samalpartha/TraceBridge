@@ -13,7 +13,6 @@ import {
   Database,
   Send,
   TrendingUp,
-  Clock,
   ArrowUp,
   ArrowDown,
   Activity,
@@ -188,11 +187,10 @@ export function KPIDashboard() {
               transition={{ delay: i * 0.04, duration: 0.3 }}
             >
               <Card
-                className={`relative overflow-hidden bg-white/50 dark:bg-slate-900/30 backdrop-blur-xl border-white/25 dark:border-white/8 transition-all duration-220 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] ${
-                  stat.highlight
+                className={`relative overflow-hidden bg-white/50 dark:bg-slate-900/30 backdrop-blur-xl border-white/25 dark:border-white/8 transition-all duration-220 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] ${stat.highlight
                     ? "!border-red-200/40 shadow-[0_0_12px_rgba(220,38,38,0.06)]"
                     : ""
-                }`}
+                  }`}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
@@ -227,13 +225,12 @@ export function KPIDashboard() {
                         <ArrowDown className="h-3 w-3 text-red-500" />
                       )}
                       <span
-                        className={`text-xs ${
-                          stat.trendUp === true
+                        className={`text-xs ${stat.trendUp === true
                             ? "text-green-600"
                             : stat.trendUp === false
-                            ? "text-red-600"
-                            : "text-muted-foreground"
-                        }`}
+                              ? "text-red-600"
+                              : "text-muted-foreground"
+                          }`}
                       >
                         {stat.trend}
                       </span>
